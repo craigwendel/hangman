@@ -20,17 +20,17 @@ let wordArray = []
 let guessesLeft = 0
 let sess = ''
 let lettersGuessed = ''
-let lettersGuessedArray = []
+var lettersGuessedArray = []
 let displayMessage = ''
 
 router.post('/newgame', function (req, res) {
+  lettersGuessedArray = []
+  lettersGuessed = ''
   word = Words.generateWord()
   wordArray = word.split('')
   usersWordArray = Words.getNewWord(wordArray)
   usersWord = usersWordArray.join('')
   guessesLeft = 8
-  lettersGuessedArray = []
-  // res.render('index', {usersWord: usersWord, guessesLeft: guessesLeft, lettersGuessed: lettersGuessed, displayMessage: displayMessage})
   res.redirect('/')
 })
 
