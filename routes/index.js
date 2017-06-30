@@ -19,8 +19,9 @@ let usersWordArray = []
 let wordArray = []
 let guessesLeft = 0
 let sess = ''
-let lettersGuessedArray = []
 let lettersGuessed = ''
+let lettersGuessedArray = []
+let displayMessage = ''
 
 router.post('/newgame', function (req, res) {
   word = Words.generateWord()
@@ -28,16 +29,18 @@ router.post('/newgame', function (req, res) {
   usersWordArray = Words.getNewWord(wordArray)
   usersWord = usersWordArray.join('')
   guessesLeft = 8
+  lettersGuessedArray = []
+  // res.render('index', {usersWord: usersWord, guessesLeft: guessesLeft, lettersGuessed: lettersGuessed, displayMessage: displayMessage})
   res.redirect('/')
 })
 
 router.post('/guessletter', function (req, res) {
   sess = req.session
-  sess.guess = req.body.guess
+  sess.guess = req.body.guess.toLowerCase()
   console.log(sess.guess)
   if (Words.checkIfGuessed(lettersGuessedArray, sess.guess)) {
-    //display message you guessed this letter
-    return res.redirect('/')
+    displayMessage = 'You already guessed that letter. Please choose another letter'
+    return res.render('index', {usersWord: usersWord, guessesLeft: guessesLeft, lettersGuessed: lettersGuessed, displayMessage: displayMessage})
   }
   lettersGuessedArray.push(sess.guess)
   lettersGuessed = lettersGuessedArray.join(', ')
@@ -46,20 +49,24 @@ router.post('/guessletter', function (req, res) {
   } else {
     guessesLeft -= 1
   }
-  if (wordArray === usersWordArray) {
-    //display user winning
+  if (usersWordArray.join('') === wordArray.join('') && guessesLeft > 0) {
+    displayMessage = 'Congrats, you won! Click New Game to start another game!'
+    usersWord = word.toUpperCase()
+    return res.render('index', {usersWord: usersWord, guessesLeft: guessesLeft, lettersGuessed: lettersGuessed, displayMessage: displayMessage})
   }
   if (guessesLeft === 0) {
-    //display losing
+    displayMessage = 'Sorry, better luck next time. Click New Game to start another game!'
+    usersWord = word.toUpperCase()
+     return res.render('index', {usersWord: usersWord, guessesLeft: guessesLeft, lettersGuessed: lettersGuessed, displayMessage: displayMessage})
   }
   usersWord = usersWordArray.join('')
   usersWord = usersWord.toUpperCase()
-
-  res.redirect('/')
+  return res.redirect('/')
 })
 
 router.get('/', function (req, res) {
-  res.render('index', {usersWord: usersWord, guessesLeft: guessesLeft, lettersGuessed: lettersGuessed})
+  let displayMessage = ''
+  res.render('index', {usersWord: usersWord, guessesLeft: guessesLeft, lettersGuessed: lettersGuessed, displayMessage: displayMessage})
 })
 
 module.exports = router

@@ -18,13 +18,16 @@
   <div class="random-word">
     <h3>The word is: {{usersWord}}</h3>
   </div>
+  <div class="display-message">
+    <h3>{{displayMessage}}</h3>
+  </div>
   <div class="guess-selector">
     <form class="make-a-guess" action='/guessletter' method="post">
       <input class="guessletter" type="textbox" name="guess" value="" placeholder="Enter a letter">
       <input type="submit" name="submit" value="Make a guess!">
     </form>
     <div class="letters-guessed">
-      <h3>Letters guessed:{{lettersGuessed}}</h3>
+      <h4>Letters guessed: {{lettersGuessed}}</h4>
     </div>
   </div>
   <div class="display-message">
